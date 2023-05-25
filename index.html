@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--link rel="stylesheet" href="style.css" type='text/css'-->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wakey Wakey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+
+      color: #3d3d3d;
+      background-color: #bcbbb5;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 30px;
+      margin-left: 45%;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .alarm-element {
+      display: flex;
+      justify-content: space-evenly;
+      gap: 100px;
+      margin-bottom: 20px;
+    }
+
+    .alarm-element:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .alarm-list {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .button {
+      display: inline-block;
+     
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #3d3d3d;
+      color: #e2c9a0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      margin-left: 47%;
+    }
+
+    .button:hover {
+      color: #bcbbb5;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
+
+    input:checked+.slider {
+      background-color: #e2c9a0;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #e2c9a0;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 40%;
+    }
+
+    .form-container {
+      display: none;
+      max-width: 400px;
+      margin-left: 40%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      
+    }
+
+
+    .form-container input[type="text"] {
+      width: 28%;
+      padding: 10px;
+      margin-left: 20px;
+      border: none;
+      background: #3d3d3d;
+      color: #ccc;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 25px;
+      
+    }
+
+    .form-container input[type="text"]:focus,
+    input[type="time"]:focus {
+      outline: none;
+    }
+
+    .form-container input[type="time"] {
+      width: 30%;
+      padding: 7px;
+      margin-left: 27px;
+      border: none;
+      background: #3d3d3d;
+      color: #ccc;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 25px;
+      
+    }
+
+    
+
+    .day-list {
+      margin-left: 22%;
+      display: block;
+      list-style-type: none;
+      padding: 0;
+     
+    }
+    
+
+    .days, .day-list{
+      font-size: 16px;
+      padding: 5px;
+    }
+    
+    .alarm_name, .alarm_time{
+      
+      margin-left: 22%;
+      font-size: 16px;
+      
+    }
+
+    .submit {
+      width: 25%;
+      padding: 10px;
+      margin-top: 20px;
+      margin-left: 20px;
+      border: none;
+      background: #3d3d3d;
+      color: #ccc;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 25px;
+      margin-left: 38%;
+    }
+    .checkbox, .checkbox:focus{
+      accent-color: #3d3d3d;
+      outline: none;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <h1>Wakey Wakey</h1>
+
+  <ul id="alarm-list">
+    <li class="alarm-element">
+      <span>
+        <p>Alarm 1</p>
+      </span>
+
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider round"></span>
+      </label>
+    </li>
+
+    <li class="alarm-element">
+      <span>
+        <p>Alarm 2</p>
+      </span>
+
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider round"></span>
+      </label>
+    </li>
+
+    <li class="alarm-element">
+      <span>
+        <p>Alarm 3</p>
+      </span>
+
+      <label class="switch">
+        <input type="checkbox" checked />
+        <span class="slider round"></span>
+      </label>
+    </li>
+  </ul>
+
+ <button href="#" class="button" onclick="openForm()">Add New Alarm</button> 
+  <div id="myForm" class="form-container">
+    <form action="/submit_alarm" method="post">
+
+      <label class="alarm_name">Alarm Name</label>
+      <input type="text" id="alarm_name" name="alarm_name" required /><br /><br />
+
+      <label class="alarm_time">Alarm Time</label>
+      <input type="time" id="alarm_time" name="alarm_time" required /><br /><br />
+
+      <label class="day-list">Repeat on:</label>
+
+      <ul class="day-list">
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Monday</label>
+        </li>
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Tuesday</label>
+        </li>
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Wednesday</label>
+        </li>
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Thursday</label>
+        </li>
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Friday</label>
+        </li>
+        <li class="days">
+          <label ><input class="checkbox" type="checkbox"> Saturday</label>
+        </li>
+        <li class="days">
+          <label><input class="checkbox" type="checkbox"> Sunday</label>
+        </li>
+      </ul>
+      <input class="submit" type="submit" value="Set Alarm" />
+    </form>
+  </div>
+  <script>
+    function openForm() {
+      document.getElementById("myForm").style.display = "block";
+    }
+  </script>
+</body>
+
+</html>
