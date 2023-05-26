@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="title" >Wakey Wakey</title>
+  <title >Wakey Wakey</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -227,7 +227,7 @@
       display: none;
       top: 5%;
       left: 1%;
-      margin-left: 3%;
+      margin-left: 5%;
       padding: 2px;
       
       border: 1px solid #ccc;
@@ -243,7 +243,7 @@
 </head>
 
 <body>
-  <h1>Wakey Wakey</h1>
+  <h1 id="title" >Wakey Wakey</h1>
 
   <ul id="alarm-list">
     <li class="alarm-element">
@@ -323,15 +323,16 @@
 
     function openForm() {
       document.getElementById("myForm").style.display = "block";
-
+    
+      
+      document.title.style.display = "none";
+   
       let myMediaQuery = window.matchMedia('(max-width: 500px)');
     
       if(myMediaQuery.matches) {
       document.getElementById("alarm-list").style.display = "none";
       document.getElementById("button").style.display = "none";
-      document.getElementById("title").setAttribute("hidden", "hidden");
       document.getElementById("title").style.display = "none";
-      document.title.style.display = "none";
    }
 }
 
