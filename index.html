@@ -49,7 +49,7 @@
 
     .button {
       display: inline-block;
-     
+      width: 9%;
       margin: 30px auto;
       padding: 10px 20px;
       background-color: #3d3d3d;
@@ -135,6 +135,9 @@
       border-radius: 10px;
       
     }
+    .form{
+      margin-top: 7%;
+    }
 
 
     .form-container input[type="text"] {
@@ -192,17 +195,21 @@
     }
 
     .submit {
-      width: 25%;
-      padding: 10px;
-      margin-top: 20px;
-      margin-left: 20px;
+      display: inline-block;
+     
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #3d3d3d;
+      color: #e2c9a0;
       border: none;
-      background: #3d3d3d;
-      color: #ccc;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 25px;
-      margin-left: 38%;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      margin-left: 35%;
+      width: 29%;
+      padding: 10px;
+      
     }
     .checkbox, .checkbox:focus{
       accent-color: #3d3d3d;
@@ -219,6 +226,7 @@
     .button {
     
       margin-left: 37%;
+      width: 50%;
     }
 
 
@@ -235,9 +243,7 @@
       border-radius: 10px;
       
     }
-    .submit {
-      width: 70%;
-}
+    
     }
     
   </style>
@@ -283,7 +289,7 @@
 
  <button href="#" id="button" class="button" onclick="openForm()">Add New Alarm</button> 
   <div id="myForm" class="form-container">
-    <form action="/submit_alarm" method="post">
+    <form class="form" action="/submit_alarm" method="post">
 
       <label class="alarm_name">Alarm Name</label>
       <input type="text" id="alarm_name" name="alarm_name" required /><br /><br />
@@ -316,7 +322,7 @@
           <label><input class="checkbox" type="checkbox"> Sunday</label>
         </li>
       </ul>
-      <button class="button" onclick="sendData()" >Set Alarm</button> 
+      <button class="submit" onclick="sendData()" >Set Alarm</button> 
     </form>
   </div>
   <script>
