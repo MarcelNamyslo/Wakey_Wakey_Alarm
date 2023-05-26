@@ -225,7 +225,6 @@
     .form-container {
       position:fixed;
       display: none;
-      max-width: 400px;
       top: 5%;
       left: 1%;
       
@@ -322,7 +321,13 @@
 
     function openForm() {
       document.getElementById("myForm").style.display = "block";
-    }
+
+      let myMediaQuery = window.matchMedia('(max-width: 500px)');
+    
+      if(myMediaQuery.matches) {
+      document.getElementById("alarm-list").style.display = "none";
+   }
+}
 
 
   
