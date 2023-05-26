@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wakey Wakey</title>
+  <title id="title" >Wakey Wakey</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -278,7 +278,7 @@
     </li>
   </ul>
 
- <button href="#" class="button" onclick="openForm()">Add New Alarm</button> 
+ <button href="#" id="button" class="button" onclick="openForm()">Add New Alarm</button> 
   <div id="myForm" class="form-container">
     <form action="/submit_alarm" method="post">
 
@@ -326,6 +326,8 @@
     
       if(myMediaQuery.matches) {
       document.getElementById("alarm-list").style.display = "none";
+      document.getElementById("button").style.display = "none";
+      document.getElementById("title").style.display = "none";
    }
 }
 
