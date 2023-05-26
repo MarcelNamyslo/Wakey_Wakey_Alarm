@@ -18,6 +18,7 @@
 
     h1 {
       margin-top: 30px;
+      margin-left: 45%;
     }
 
     ul {
@@ -58,7 +59,7 @@
       cursor: pointer;
       text-decoration: none;
       font-size: 16px;
-      margin-left: 40%;
+      margin-left: 47%;
     }
 
     .button:hover {
@@ -126,14 +127,15 @@
     }
 
     .form-container {
-      
-      display: hidden;
+      display: none;
       max-width: 400px;
-      margin-left: 30%;
+      margin-left: 40%;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 10px;
+      
     }
+
 
     .form-container input[type="text"] {
       width: 28%;
@@ -206,6 +208,35 @@
       accent-color: #3d3d3d;
       outline: none;
     }
+    @media only screen and (device-width: 390px) 
+    and (device-height: 844px) 
+    and (-webkit-device-pixel-ratio: 3)  { 
+
+      h1 {
+      margin-top: 30px;
+      margin-left: 30%;
+    }
+    .button {
+    
+      margin-left: 307%;
+    }
+
+
+    .form-container {
+      position:fixed;
+      display: none;
+      max-width: 400px;
+      top: 50%;
+      left: 50%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      
+    }
+    .submit {
+      width: 50%;
+}
+    
   </style>
 </head>
 
@@ -282,13 +313,50 @@
           <label><input class="checkbox" type="checkbox"> Sunday</label>
         </li>
       </ul>
-      <input class="submit" type="submit" value="Set Alarm" />
+      <button class="button" onclick="sendData()" >Set Alarm</button> 
     </form>
   </div>
   <script>
+
+
     function openForm() {
       document.getElementById("myForm").style.display = "block";
     }
+
+
+  
+  function sendData() {
+    var data = document.getElementById('alarm_name').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/saveData", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send('data=' + encodeURIComponent(data));
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        console.log('Data saved successfully.');
+      } else {
+        console.log('Error saving data.');
+      }
+    };
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+  });
+
+  function fetchData() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/getData", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var data = xhr.responseText;
+        document.getElementById('alarm_name').value = data;
+      }
+    };
+    xhr.send();
+  }
+
+
   </script>
 </body>
 
