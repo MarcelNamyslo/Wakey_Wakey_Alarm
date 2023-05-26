@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wakey Wakey</title>
+  <title >Wakey Wakey</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -49,7 +49,7 @@
 
     .button {
       display: inline-block;
-     
+      width: 9%;
       margin: 30px auto;
       padding: 10px 20px;
       background-color: #3d3d3d;
@@ -135,6 +135,9 @@
       border-radius: 10px;
       
     }
+    .form{
+      margin-top: 7%;
+    }
 
 
     .form-container input[type="text"] {
@@ -192,17 +195,21 @@
     }
 
     .submit {
-      width: 25%;
-      padding: 10px;
-      margin-top: 20px;
-      margin-left: 20px;
+      display: inline-block;
+     
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #3d3d3d;
+      color: #e2c9a0;
       border: none;
-      background: #3d3d3d;
-      color: #ccc;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 25px;
-      margin-left: 38%;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      margin-left: 35%;
+      width: 29%;
+      padding: 10px;
+      
     }
     .checkbox, .checkbox:focus{
       accent-color: #3d3d3d;
@@ -214,35 +221,35 @@
 
       h1 {
       margin-top: 30px;
-      margin-left: 30%;
+      margin-left: 25%;
     }
     .button {
-    
-      margin-left: 307%;
+      margin-left: 28%;
+      width: 50%;
     }
 
 
     .form-container {
       position:fixed;
       display: none;
-      max-width: 400px;
-      top: 50%;
-      left: 50%;
-      padding: 20px;
+      top: 5%;
+      left: 1%;
+      margin-left: 3%;
+      width:90%;
+      padding: 2px;
+      font-size: 17px;
       border: 1px solid #ccc;
       border-radius: 10px;
       
     }
-    .submit {
-      width: 50%;
-}
+    
     }
     
   </style>
 </head>
 
 <body>
-  <h1>Wakey Wakey</h1>
+  <h1 id="title" >Wakey Wakey</h1>
 
   <ul id="alarm-list">
     <li class="alarm-element">
@@ -279,9 +286,9 @@
     </li>
   </ul>
 
- <button href="#" class="button" onclick="openForm()">Add New Alarm</button> 
+ <button href="#" id="button" class="button" onclick="openForm()">Add New Alarm</button> 
   <div id="myForm" class="form-container">
-    <form action="/submit_alarm" method="post">
+    <form class="form" action="/submit_alarm" method="post">
 
       <label class="alarm_name">Alarm Name</label>
       <input type="text" id="alarm_name" name="alarm_name" required /><br /><br />
@@ -314,7 +321,7 @@
           <label><input class="checkbox" type="checkbox"> Sunday</label>
         </li>
       </ul>
-      <button class="button" onclick="sendData()" >Set Alarm</button> 
+      <button class="submit" onclick="sendData()" >Set Alarm</button> 
     </form>
   </div>
   <script>
@@ -322,7 +329,15 @@
 
     function openForm() {
       document.getElementById("myForm").style.display = "block";
-    }
+      
+      let myMediaQuery = window.matchMedia('(max-width: 500px)');
+    
+      if(myMediaQuery.matches) {
+      document.getElementById("alarm-list").style.display = "none";
+      document.getElementById("button").style.display = "none";
+      document.getElementById("title").style.display = "none";
+   }
+}
 
 
   
