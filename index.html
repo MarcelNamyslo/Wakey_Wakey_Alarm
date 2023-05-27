@@ -33,14 +33,7 @@
       margin-bottom: 20px;
     }
 
-    .alarm-element:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      border-bottom: 1px solid #ccc;
-    }
+  
 
     .alarm-list {
       display: flex;
@@ -134,9 +127,11 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       
+      
     }
     .form{
       margin-top: 7%;
+      font-size: 20px;
     }
 
 
@@ -148,7 +143,7 @@
       background: #3d3d3d;
       color: #ccc;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 20px;
       margin-bottom: 25px;
       
     }
@@ -166,7 +161,7 @@
       background: #3d3d3d;
       color: #ccc;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 20px;
       margin-bottom: 25px;
       
     }
@@ -178,19 +173,20 @@
       display: block;
       list-style-type: none;
       padding: 0;
+      font-size: 20px;
      
     }
     
 
     .days, .day-list{
-      font-size: 16px;
+      font-size: 20px;
       padding: 5px;
     }
     
     .alarm_name, .alarm_time{
-      
+      font-size: 20px;
       margin-left: 22%;
-      font-size: 16px;
+     
       
     }
 
@@ -213,8 +209,12 @@
     }
     .checkbox, .checkbox:focus{
       accent-color: #3d3d3d;
+      
       outline: none;
+      font-size: 20px;
     }
+
+
     @media only screen and (device-width: 390px) 
     and (device-height: 844px) 
     and (-webkit-device-pixel-ratio: 3)  { 
