@@ -340,7 +340,8 @@
         let myMediaQuery = window.matchMedia("(max-width: 500px)");
 
         if (myMediaQuery.matches) {
-          document.getElementsByClassName("alarm_list").style.display = "none";
+          document.getElementById("alarm_list1").style.display = "none";
+          document.getElementById("alarm_list2").style.display = "none";
           document.getElementById("button").style.display = "none";
           document.getElementById("title").style.display = "none";
         }
