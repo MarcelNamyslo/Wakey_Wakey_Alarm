@@ -390,6 +390,15 @@
         newItem2.appendChild(label);
         list2.appendChild(newItem2);
         document.getElementById("myForm").style.display = "none";
+
+        let myMediaQuery = window.matchMedia("(max-width: 500px)");
+
+        if (myMediaQuery.matches) {
+          document.getElementById("alarm_list1").style.display = "block";
+          document.getElementById("alarm_list2").style.display = "block";
+          document.getElementById("button").style.display = "block";
+          document.getElementById("title").style.display = "block";
+        }
       }
 
       var form = document.getElementById("myForm");
