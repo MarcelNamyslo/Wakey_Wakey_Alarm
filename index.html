@@ -32,7 +32,7 @@
       .alarm-element {
         display: flex;
         gap: 20%;
-        margin-bottom: 25px;
+        margin-top: 28px;
         margin-left: 20px;
         font-size: 15px;
       }
@@ -233,7 +233,8 @@
     <h1 id="title">Wakey Wakey</h1>
 
     <div class="two-column-list">
-      <ul class="alarm_list" id="alarm_list">
+      <ul class="alarm_list" id="alarm_list1">
+        <!-- 
         <li class="alarm-element">
           <span>
             <p>Alasvdffdrm 1</p>
@@ -249,27 +250,12 @@
             <p>Alasvdffdrm 1</p>
           </span>
         </li>
-
-        <li class="alarm-element">
-          <span>
-            <p>Alarm sdds2</p>
-          </span>
-        </li>
-
-        <li class="alarm-element">
-          <span>
-            <p>Alam 3</p>
-          </span>
-        </li>
-
-        <li class="alarm-element">
-          <span>
-            <p>Alam 3</p>
-          </span>
-        </li>
+-->
+       
       </ul>
 
-      <ul class="alarm_list" id="alarm_list">
+      <ul class="alarm_list" id="alarm_list2">
+         <!-- 
         <li class="alarm-element">
           <label class="switch">
             <input type="checkbox" checked />
@@ -288,26 +274,7 @@
             <span class="slider"></span>
           </label>
         </li>
-        <li class="alarm-element">
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </li>
-
-        <li class="alarm-element">
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </li>
-
-        <li class="alarm-element">
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </li>
+      -->
       </ul>
     </div>
 
@@ -392,11 +359,18 @@
         //create slider
 
         // Add new item to the list
-        var list = document.getElementById("alarm_list");
-        var newItem = document.createElement("li");
-        newItem.classList.add("alarm-element");
-        newItem.textContent = alarm.alarm_name + ", " + alarm.alarm_time;
+        var list = document.getElementById("alarm_list1");
+        var list2 = document.getElementById("alarm_list2");
+        var newItem1 = document.createElement("li");
+        newItem1.classList.add("alarm-element");
+        newItem1.style.marginTop = "55px";
+        newItem1.textContent = alarm.alarm_name + ", " + alarm.alarm_time;
+        list.appendChild(newItem1);
 
+
+        var list2 = document.getElementById("alarm_list2");
+        var newItem2 = document.createElement("li");
+        newItem2.classList.add("alarm-element");
         var label = document.createElement("label");
         var input = document.createElement("input");
         var span = document.createElement("span");
@@ -408,8 +382,8 @@
         label.appendChild(input);
         label.appendChild(span);
 
-        newItem.appendChild(label);
-        list.appendChild(newItem);
+        newItem2.appendChild(label);
+        list2.appendChild(newItem2);
       }
 
       var form = document.getElementById("myForm");
