@@ -227,8 +227,8 @@
         }
 
         .two-column-list {
-        margin-left: 3%;
-      }
+          margin-left: 3%;
+        }
       }
     </style>
   </head>
@@ -238,6 +238,12 @@
 
     <div class="two-column-list">
       <ul class="alarm_list" id="alarm_list1">
+       
+        <li class="alarm-element">
+          <span>
+            <p>Alasvdffdrm 1</p>
+          </span>
+        </li>
         <!-- 
         <li class="alarm-element">
           <span>
@@ -249,17 +255,18 @@
             <p>Alasvdffdrm 1</p>
           </span>
         </li>
-        <li class="alarm-element">
-          <span>
-            <p>Alasvdffdrm 1</p>
-          </span>
-        </li>
 -->
-       
       </ul>
 
       <ul class="alarm_list" id="alarm_list2">
-         <!-- 
+        
+        <li class="alarm-element">
+          <label class="switch">
+            <input type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </li>
+        <!-- 
         <li class="alarm-element">
           <label class="switch">
             <input type="checkbox" checked />
@@ -272,14 +279,7 @@
             <span class="slider"></span>
           </label>
         </li>
-        <li class="alarm-element">
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </li>
-      -->
-      </ul>
+      --></ul>
     </div>
 
     <button href="#" id="button" class="button" onclick="openForm()">
@@ -372,7 +372,6 @@
         newItem1.textContent = alarm.alarm_name + ", " + alarm.alarm_time;
         list.appendChild(newItem1);
 
-
         var list2 = document.getElementById("alarm_list2");
         var newItem2 = document.createElement("li");
         newItem2.classList.add("alarm-element");
@@ -401,17 +400,12 @@
         }
       }
 
-      var form = document.getElementById("myForm");
-      form.addEventListener("submit", newAlarm);
-
-
-    
-
-
-      function sendData() {
+      function sendData(event) {
+        event.preventDefault();
         var alarm_name = document.getElementById("alarm_name").value;
         var alarm_time = document.getElementById("alarm_time").value;
-        var data = alarm_name + " " +  alarm_time;
+        var data = document.getElementById("alarm_name").value;
+        console.log(data);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/saveData", true);
         xhr.setRequestHeader(
@@ -428,21 +422,20 @@
         };
       }
 
-      window.addEventListener("DOMContentLoaded", () => {
-        fetchData();
-      });
+      var form = document.getElementById("myForm");
+      form.addEventListener("submit", sendData);
 
-      function fetchData() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/getData", true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            var data = xhr.responseText;
-            document.getElementById("alarm_name").value = data;
+      setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("temperature").innerHTML =
+              this.responseText;
           }
         };
-        xhr.send();
-      }
+        xhttp.open("GET", "/back", true);
+        xhttp.send();
+      }, 1000);
     </script>
   </body>
 </html>
