@@ -3,10 +3,10 @@
 #include <ESPAsyncWebServer.h>
 
 
-//const char* ssid = "Hedon Misafir";
-const char* ssid = "Point";
-const char* password =  "Point2424";
-//const char* password =  "hedon2020";
+const char* ssid = "Hedon Misafir";
+//const char* ssid = "Point";
+//const char* password =  "Point2424";
+const char* password =  "hedon2020";
 
 AsyncWebServer server(80);
 
@@ -16,7 +16,7 @@ void handleSaveData(AsyncWebServerRequest *request) {
     String data;
     if (request->hasParam("data")) {
       data = request->getParam("data")->value();
-      File file = SPIFFS.open("/data.txt", "w");
+      File file = SPIFFS.open("/data.txt", "a");
       if (!file) {
         request->send(500, "text/plain", "Error opening file for writing.");
         return;
@@ -41,17 +41,14 @@ void handlePostRequest(AsyncWebServerRequest *request) {
     if (request->hasParam("data", true)) {
       String data = request->getParam("data", true)->value();
 
-      File file = SPIFFS.open("/data.txt", "w");
+      File file = SPIFFS.open("/data.txt", "a");
       if (!file) {
         //request->send(500, "text/plain", "Error opening file for writing.");
         return;
       }
-      if (file.println(data) == 0) {
-        //request->send(500, "text/plain", "Error writing data to file.");
-        return;
-      }
+      //file.close();
      
-      //request->send(200, "text/plain", "Data saved successfully.");
+  
       
       // Do something with the received data
       Serial.println("Received data: " + data);

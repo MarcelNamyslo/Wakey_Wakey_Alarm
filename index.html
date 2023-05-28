@@ -227,7 +227,7 @@
         }
 
         .two-column-list {
-        margin-left: 4%;
+        margin-left: 3%;
       }
       }
     </style>
@@ -403,9 +403,15 @@
 
       var form = document.getElementById("myForm");
       form.addEventListener("submit", newAlarm);
-      /**
+
+
+    
+
+
       function sendData() {
-        var data = document.getElementById("alarm_name").value;
+        var alarm_name = document.getElementById("alarm_name").value;
+        var alarm_time = document.getElementById("alarm_time").value;
+        var data = alarm_name + " " +  alarm_time;
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/saveData", true);
         xhr.setRequestHeader(
@@ -436,7 +442,7 @@
           }
         };
         xhr.send();
-      }*/
+      }
     </script>
   </body>
 </html>
