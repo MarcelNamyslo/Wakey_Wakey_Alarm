@@ -113,6 +113,9 @@ void setup() {
   });
 
 
+   server.on("/back", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", );
+  });
   server.on("/getData", HTTP_GET, [](AsyncWebServerRequest * request) {
     // Handle the POST request
     handleGetData(request);

@@ -5,6 +5,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <title>Wakey Wakey</title>
     <style>
       body {
@@ -31,10 +35,10 @@
 
       .alarm-element {
         display: flex;
-        gap: 20%;
+        list-style-type: none;
+        gap: 20px;
         margin-top: 28px;
         margin-left: 20px;
-        font-size: 15px;
       }
 
       .button {
@@ -57,6 +61,7 @@
       }
 
       .switch {
+        margin-right: 30px;
         position: relative;
         /** display: inline-block;*/
         width: 60px;
@@ -117,6 +122,16 @@
         border-radius: 40%;
       }
 
+      .toggler {
+        background-color: #3d3d3d;
+        color: #e2c9a0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 22px;
+        margin-top: 12px;
+      }
       .form-container {
         display: none;
         max-width: 400px;
@@ -195,6 +210,22 @@
         width: 29%;
         padding: 10px;
       }
+
+      .cancel {
+        /**display: inline-block;*/
+
+        padding: 10px 20px;
+        background-color: #3d3d3d;
+        color: #e2c9a0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 12px;
+        margin-left: 39%;
+        width: 20%;
+       
+      }
       .checkbox,
       .checkbox:focus {
         accent-color: #3d3d3d;
@@ -202,6 +233,39 @@
         outline: none;
         font-size: 20px;
       }
+      .timeset {
+          display: flex;
+          justify-content: space-between;
+          gap: 50px;
+          margin-top: 20px;
+          
+          margin-right: 27px;
+          border: none;
+          border-radius: 10px;
+          font-size: 17px;
+          margin-bottom: 25px;
+         
+        }
+
+        #settings{
+          max-width: 500px;
+          margin-left: 36%;
+        }
+      .dayssettings {
+      display: flex;
+      justify-content: space-between;
+
+      gap: 100px;
+      margin-bottom: 5px;
+    }
+      #days {
+      align-self: flex-start;
+    }
+
+    .alarm_settings_time{
+      margin-left: 10%;
+    }
+    
 
       @media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
         h1 {
@@ -229,6 +293,7 @@
         .two-column-list {
           margin-left: 3%;
         }
+        
       }
     </style>
   </head>
@@ -238,7 +303,6 @@
 
     <div class="two-column-list">
       <ul class="alarm_list" id="alarm_list1">
-       
         <li class="alarm-element">
           <span>
             <p>Alasvdffdrm 1</p>
@@ -259,12 +323,15 @@
       </ul>
 
       <ul class="alarm_list" id="alarm_list2">
-        
         <li class="alarm-element">
           <label class="switch">
             <input type="checkbox" checked />
             <span class="slider"></span>
           </label>
+
+          <button  id="toggler" class="toggler" onclick="togglesettings()" >
+            <i class="fas fa-bars"></i>
+          </button>
         </li>
         <!-- 
         <li class="alarm-element">
@@ -281,6 +348,98 @@
         </li>
       --></ul>
     </div>
+
+    <ul id="settingslist">
+      <div id="settings" class="form-container">
+        <form >
+          <div class="timeset">
+            <label for="alarm_time" class="alarm_settings_time">Alarm Time</label>
+
+            <input
+              type="time"
+              id="alarm_settings_time"
+              name="alarm_time"
+              required
+            /><br /><br />
+            <label for="timeset" id="timeset">time set</label>
+          </div>
+          <ul id="day_list" class="day_settings_list">
+            <li class="dayssettings">
+              <span>
+                <p id="day">Monday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Tuesday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Wednesday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Thursday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Friday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Saturday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+            <li class="dayssettings">
+              <span>
+                <p id="day">Sunday</p>
+              </span>
+
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+          <input class="submit" type="submit" value="Submit" />
+          
+        </form>
+      </div>
+    </ul>
 
     <button href="#" id="button" class="button" onclick="openForm()">
       Add New Alarm
@@ -328,11 +487,43 @@
             <label><input class="checkbox" type="checkbox" /> Sunday</label>
           </li>
         </ul>
+
         <input class="submit" type="submit" value="Submit" />
+        <button  id="cancel" class="cancel" onclick="cancelnewAlarm()">
+          Cancel
+        </button>
       </form>
     </div>
     <script>
-      var alarmlist = document.getElementById("alarm-list");
+   
+
+      let displayed = false;
+
+      function togglesettings(){
+        if (!displayed) {
+          document.getElementById("settings").style.display = "block";
+          displayed = true;
+        } else {
+          document.getElementById("settings").style.display = "none";
+          displayed = false;
+        }
+
+      }
+
+     
+
+  
+
+      const startTime = document.getElementById("alarm_settings_time");
+      const valueSpan = document.getElementById("timeset");
+
+    startTime.addEventListener(
+      "input",
+      () => {
+        valueSpan.innerText = startTime.value;
+      },
+      false
+    );
 
       function openForm() {
         document.getElementById("myForm").style.display = "block";
@@ -344,10 +535,15 @@
           document.getElementById("alarm_list2").style.display = "none";
           document.getElementById("button").style.display = "none";
           document.getElementById("title").style.display = "none";
+          
         }
       }
+      function cancelnewAlarm(){
+        document.getElementById("myForm").style.display = "none";
 
+      }
       function newAlarm(event) {
+        console.log("Hallo");
         event.preventDefault();
         var alarmname = document.getElementById("alarm_name").value;
         var alarmtime = document.getElementById("alarm_time").value;
@@ -362,7 +558,6 @@
         alarmtime = "";
 
         //create slider
-
         // Add new item to the list
         var list = document.getElementById("alarm_list1");
         var list2 = document.getElementById("alarm_list2");
@@ -372,12 +567,21 @@
         newItem1.textContent = alarm.alarm_name + ", " + alarm.alarm_time;
         list.appendChild(newItem1);
 
+
         var list2 = document.getElementById("alarm_list2");
         var newItem2 = document.createElement("li");
         newItem2.classList.add("alarm-element");
         var label = document.createElement("label");
         var input = document.createElement("input");
         var span = document.createElement("span");
+
+        var fa_bars = document.createElement("button");
+        fa_bars.classList.add("toggler");
+        fa_bars.id = "toggler";
+        fa_bars.onclick= togglesettings;
+        var i = document.createElement("i");
+        i.classList.add("fas", "fa-bars");
+        fa_bars.appendChild(i);
 
         label.classList.add("switch");
         input.type = "checkbox";
@@ -387,6 +591,8 @@
         label.appendChild(span);
 
         newItem2.appendChild(label);
+        newItem2.appendChild(fa_bars);
+
         list2.appendChild(newItem2);
         document.getElementById("myForm").style.display = "none";
 
@@ -398,6 +604,7 @@
           document.getElementById("button").style.display = "block";
           document.getElementById("title").style.display = "block";
         }
+        console.log("Hallo");
       }
 
       function sendData(event) {
@@ -423,9 +630,10 @@
       }
 
       var form = document.getElementById("myForm");
-      form.addEventListener("submit", sendData);
+      form.addEventListener("submit", newAlarm);
 
-      setInterval(function () {
+
+      /**setInterval(function () {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
@@ -436,6 +644,7 @@
         xhttp.open("GET", "/back", true);
         xhttp.send();
       }, 1000);
+      */
     </script>
   </body>
 </html>
