@@ -224,7 +224,6 @@
         font-size: 12px;
         margin-left: 39%;
         width: 20%;
-       
       }
       .checkbox,
       .checkbox:focus {
@@ -234,38 +233,36 @@
         font-size: 20px;
       }
       .timeset {
-          display: flex;
-          justify-content: space-between;
-          gap: 50px;
-          margin-top: 20px;
-          
-          margin-right: 27px;
-          border: none;
-          border-radius: 10px;
-          font-size: 17px;
-          margin-bottom: 25px;
-         
-        }
+        display: flex;
+        justify-content: space-between;
+        gap: 50px;
+        margin-top: 20px;
 
-        #settings{
-          max-width: 500px;
-          margin-left: 36%;
-        }
+        margin-right: 27px;
+        border: none;
+        border-radius: 10px;
+        font-size: 17px;
+        margin-bottom: 25px;
+      }
+
+      #settings {
+        max-width: 500px;
+        margin-left: 36%;
+      }
       .dayssettings {
-      display: flex;
-      justify-content: space-between;
+        display: flex;
+        justify-content: space-between;
 
-      gap: 100px;
-      margin-bottom: 5px;
-    }
+        gap: 100px;
+        margin-bottom: 5px;
+      }
       #days {
-      align-self: flex-start;
-    }
+        align-self: flex-start;
+      }
 
-    .alarm_settings_time{
-      margin-left: 10%;
-    }
-    
+      .alarm_settings_time {
+        margin-left: 10%;
+      }
 
       @media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
         h1 {
@@ -293,7 +290,6 @@
         .two-column-list {
           margin-left: 3%;
         }
-        
       }
     </style>
   </head>
@@ -329,7 +325,7 @@
             <span class="slider"></span>
           </label>
 
-          <button  id="toggler" class="toggler" onclick="togglesettings()" >
+          <button id="toggler" class="toggler" onclick="togglesettings(id)">
             <i class="fas fa-bars"></i>
           </button>
         </li>
@@ -351,9 +347,11 @@
 
     <ul id="settingslist">
       <div id="settings" class="form-container">
-        <form >
+        <form>
           <div class="timeset">
-            <label for="alarm_time" class="alarm_settings_time">Alarm Time</label>
+            <label for="alarm_time" class="alarm_settings_time"
+              >Alarm Time</label
+            >
 
             <input
               type="time"
@@ -370,8 +368,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="mondayCheckbox" type="checkbox" />
+                <span id="mondaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -380,8 +378,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="tuesdayCheckbox" type="checkbox" />
+                <span id="tuesdaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -390,8 +388,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="wednesdayCheckbox" type="checkbox" />
+                <span id="wednesdaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -400,8 +398,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="thursdayCheckbox" type="checkbox" />
+                <span id="thursdaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -410,8 +408,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="fridayCheckbox" type="checkbox" />
+                <span id="fridaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -420,8 +418,8 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="saturdayCheckbox" type="checkbox" />
+                <span id="saturdaySpan" class="slider round"></span>
               </label>
             </li>
             <li class="dayssettings">
@@ -430,13 +428,12 @@
               </span>
 
               <label class="switch">
-                <input type="checkbox" checked />
-                <span class="slider round"></span>
+                <input id="sundayCheckbox" type="checkbox" />
+                <span id="sundaySpan" class="slider round"></span>
               </label>
             </li>
           </ul>
           <input class="submit" type="submit" value="Submit" />
-          
         </form>
       </div>
     </ul>
@@ -466,64 +463,70 @@
 
         <ul id="day_list" class="day_list">
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Monday</label>
+            <label
+              ><input id="mondayAlarm" class="checkbox" type="checkbox" />
+              Monday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Tuesday</label>
+            <label
+              ><input id="tuesdayAlarm" class="checkbox" type="checkbox" />
+              Tuesday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Wednesday</label>
+            <label
+              ><input id="wednesdayAlarm" class="checkbox" type="checkbox" />
+              Wednesday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Thursday</label>
+            <label
+              ><input id="thursdayAlarm" class="checkbox" type="checkbox" />
+              Thursday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Friday</label>
+            <label
+              ><input id="fridayAlarm" class="checkbox" type="checkbox" />
+              Friday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Saturday</label>
+            <label
+              ><input id="saturdayAlarm" class="checkbox" type="checkbox" />
+              Saturday</label
+            >
           </li>
           <li class="days">
-            <label><input class="checkbox" type="checkbox" /> Sunday</label>
+            <label
+              ><input id="sundayAlarm" class="checkbox" type="checkbox" />
+              Sunday</label
+            >
           </li>
         </ul>
 
         <input class="submit" type="submit" value="Submit" />
-        <button  id="cancel" class="cancel" onclick="cancelnewAlarm()">
+        <button id="cancel" class="cancel" onclick="cancelnewAlarm()">
           Cancel
         </button>
       </form>
     </div>
     <script>
-   
+      //bool if setting is displayed, used in togglesettings()
 
       let displayed = false;
+      //form for adding a alarm
+      var form = document.getElementById("myForm");
 
-      function togglesettings(){
-        if (!displayed) {
-          document.getElementById("settings").style.display = "block";
-          displayed = true;
-        } else {
-          document.getElementById("settings").style.display = "none";
-          displayed = false;
-        }
+      var alarmindex = 0;
 
-      }
+      var activeSettingsId;
 
-     
+      //values for alarm time in settings
+      
 
-  
-
-      const startTime = document.getElementById("alarm_settings_time");
-      const valueSpan = document.getElementById("timeset");
-
-    startTime.addEventListener(
-      "input",
-      () => {
-        valueSpan.innerText = startTime.value;
-      },
-      false
-    );
+      
 
       function openForm() {
         document.getElementById("myForm").style.display = "block";
@@ -535,41 +538,76 @@
           document.getElementById("alarm_list2").style.display = "none";
           document.getElementById("button").style.display = "none";
           document.getElementById("title").style.display = "none";
-          
         }
       }
-      function cancelnewAlarm(){
-        document.getElementById("myForm").style.display = "none";
 
+      function togglesettings(id) {
+        var buttonId = id;
+        console.log("id"+ buttonId);
+        if (!displayed) {
+          document.getElementById("settings").style.display = "block";
+          displayed = true;
+        } else {
+          document.getElementById("settings").style.display = "none";
+          displayed = false;
+        }
       }
+
+
+      function cancelnewAlarm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+
+      const alarms = [];
       function newAlarm(event) {
-        console.log("Hallo");
         event.preventDefault();
+        var index = alarmindex;
+        alarmindex = alarmindex + 1;
         var alarmname = document.getElementById("alarm_name").value;
         var alarmtime = document.getElementById("alarm_time").value;
-        console.log(alarmname);
-        console.log(alarmtime);
-        var alarm = {
-          alarm_name: alarmname,
-          alarm_time: alarmtime,
-        };
-        // Reset form inputs
-        alarmname = "";
-        alarmtime = "";
+        var monday = document.getElementById("mondayAlarm").checked ? 1 : 0;
+        var tuesday = document.getElementById("tuesdayAlarm").checked ? 1 : 0;
+        var wednesday = document.getElementById("wednesdayAlarm").checked
+          ? 1
+          : 0;
+        var thursday = document.getElementById("thursdayAlarm").checked ? 1 : 0;
+        var friday = document.getElementById("fridayAlarm").checked ? 1 : 0;
+        var saturday = document.getElementById("saturdayAlarm").checked ? 1 : 0;
+        var sunday = document.getElementById("sundayAlarm").checked ? 1 : 0;
+
+        const alarm = [
+          alarmindex,
+          alarmname,
+          alarmtime,
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday,
+          sunday,
+        ];
+
+        alarms.push(alarm);
 
         //create slider
         // Add new item to the list
         var list = document.getElementById("alarm_list1");
         var list2 = document.getElementById("alarm_list2");
         var newItem1 = document.createElement("li");
+        newItem1.id = "alarm_element" + " " + index;
         newItem1.classList.add("alarm-element");
         newItem1.style.marginTop = "55px";
-        newItem1.textContent = alarm.alarm_name + ", " + alarm.alarm_time;
-        list.appendChild(newItem1);
+        newItem1.textContent = alarmname + ", " + alarmtime;
+        // Reset form inputs
+        alarmname = "";
+        alarmtime = "";
 
+        list.appendChild(newItem1);
 
         var list2 = document.getElementById("alarm_list2");
         var newItem2 = document.createElement("li");
+        newItem2.id = "alarm_element" + " " + index;
         newItem2.classList.add("alarm-element");
         var label = document.createElement("label");
         var input = document.createElement("input");
@@ -577,15 +615,27 @@
 
         var fa_bars = document.createElement("button");
         fa_bars.classList.add("toggler");
-        fa_bars.id = "toggler";
-        fa_bars.onclick= togglesettings;
+        fa_bars.id = "toggler " + index;
+        fa_bars.onclick = function() {
+        activeSettingsId = index
+        if (!displayed) {
+          document.getElementById("settings").style.display = "block";
+          displayed = true;
+        } else {
+          document.getElementById("settings").style.display = "none";
+          displayed = false;
+        }
+      }
+
         var i = document.createElement("i");
         i.classList.add("fas", "fa-bars");
         fa_bars.appendChild(i);
 
         label.classList.add("switch");
         input.type = "checkbox";
+        input.id = "checkbox" + index;
         span.classList.add("slider");
+        span.id = "slider " + index;
 
         label.appendChild(input);
         label.appendChild(span);
@@ -604,7 +654,16 @@
           document.getElementById("button").style.display = "block";
           document.getElementById("title").style.display = "block";
         }
-        console.log("Hallo");
+
+        document.getElementById("alarm_name").checked = false;
+        document.getElementById("alarm_time").checked = false;
+        document.getElementById("mondayAlarm").checked = false;
+        document.getElementById("tuesdayAlarm").checked = false;
+        document.getElementById("wednesdayAlarm").checked = false;
+        document.getElementById("thursdayAlarm").checked = false;
+        document.getElementById("fridayAlarm").checked = false;
+        document.getElementById("saturdayAlarm").checked = false;
+        document.getElementById("sundayAlarm").checked = false;
       }
 
       function sendData(event) {
@@ -629,9 +688,78 @@
         };
       }
 
-      var form = document.getElementById("myForm");
+      function updateSlider(i, slider, checkbox) {
+        alarmindex = activeSettingsId;
+        if (!checkbox.checked) {
+          console.log(alarmindex)
+          alarms[alarmindex][i] = 1;
+          console.log(alarms[alarmindex])
+          slider.style.transform = "translateX(26px)";
+          slider.style.msTransform = "translateX(0px)";
+          slider.style.webkitTransform = "translateX(0px)";
+          slider.style.backgroundColor = "#e2c9a0";
+        } else {
+          
+          alarms[alarmindex][i] = 0;
+          console.log(alarms[alarmindex])
+          slider.style.backgroundColor = "#ccc";
+          slider.style.transform = "translateX(0px)";
+          slider.style.msTransform = "translateX(0px)";
+          slider.style.webkitTransform = "translateX(0px)";
+        }
+      }
+
+      const startTime = document.getElementById("alarm_settings_time");
+      const valueSpan = document.getElementById("timeset");
+      startTime.addEventListener(
+        "input",
+        () => {
+          alarmindex = activeSettingsId;
+          valueSpan.innerText = startTime.value;
+          alarms[alarmindex][2] = startTime.value;;
+          console.log(alarms[alarmindex])
+        },
+        false
+      );
+
+
       form.addEventListener("submit", newAlarm);
 
+      var mondayCheckbox = document.getElementById("mondayCheckbox");
+      var mondaySpan = document.getElementById("mondaySpan");
+      mondaySpan.addEventListener("click", function () {
+        updateSlider(3, mondaySpan, mondayCheckbox);
+      });
+      var tuesdayCheckbox = document.getElementById("tuesdayCheckbox");
+      var tuesdaySpan = document.getElementById("tuesdaySpan");
+      tuesdaySpan.addEventListener("click", function () {
+        updateSlider(4, tuesdaySpan, tuesdayCheckbox);
+      });
+      var wednesdayCheckbox = document.getElementById("wednesdayCheckbox");
+      var wednesdaySpan = document.getElementById("wednesdaySpan");
+      wednesdaySpan.addEventListener("click", function () {
+        updateSlider(5, wednesdaySpan, wednesdayCheckbox);
+      });
+      var thursdayCheckbox = document.getElementById("thursdayCheckbox");
+      var thursdaySpan = document.getElementById("thursdaySpan");
+      thursdaySpan.addEventListener("click", function () {
+        updateSlider(6, thursdaySpan, thursdayCheckbox);
+      });
+      var fridayCheckbox = document.getElementById("fridayCheckbox");
+      var fridaySpan = document.getElementById("fridaySpan");
+      fridaySpan.addEventListener("click", function () {
+        updateSlider(7, fridaySpan, fridayCheckbox);
+      });
+      var saturdayCheckbox = document.getElementById("saturdayCheckbox");
+      var saturdaySpan = document.getElementById("saturdaySpan");
+      saturdaySpan.addEventListener("click", function () {
+        updateSlider(8, saturdaySpan, saturdayCheckbox);
+      });
+      var sundayCheckbox = document.getElementById("sundayCheckbox");
+      var sundaySpan = document.getElementById("sundaySpan");
+      sundaySpan.addEventListener("click", function () {
+        updateSlider(9, sundaySpan, sundayCheckbox);
+      });
 
       /**setInterval(function () {
         var xhttp = new XMLHttpRequest();
