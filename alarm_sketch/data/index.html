@@ -296,6 +296,11 @@
 
   <body>
     <h1 id="title">Wakey Wakey</h1>
+    <form id="textForm">
+      <input type="text" id="textInput" />
+      <button type="submit">Send</button>
+    </form>
+    <div id="receivedText"></div>
 
     <div class="two-column-list">
       <ul class="alarm_list" id="alarm_list1">
@@ -524,9 +529,6 @@
       var activeSettingsId;
 
       //values for alarm time in settings
-      
-
-      
 
       function openForm() {
         document.getElementById("myForm").style.display = "block";
@@ -543,7 +545,7 @@
 
       function togglesettings(id) {
         var buttonId = id;
-        console.log("id"+ buttonId);
+        console.log("id" + buttonId);
         if (!displayed) {
           document.getElementById("settings").style.display = "block";
           displayed = true;
@@ -553,12 +555,12 @@
         }
       }
 
-
       function cancelnewAlarm() {
         document.getElementById("myForm").style.display = "none";
       }
 
       const alarms = [];
+
       function newAlarm(event) {
         event.preventDefault();
         var index = alarmindex;
@@ -616,16 +618,16 @@
         var fa_bars = document.createElement("button");
         fa_bars.classList.add("toggler");
         fa_bars.id = "toggler " + index;
-        fa_bars.onclick = function() {
-        activeSettingsId = index
-        if (!displayed) {
-          document.getElementById("settings").style.display = "block";
-          displayed = true;
-        } else {
-          document.getElementById("settings").style.display = "none";
-          displayed = false;
-        }
-      }
+        fa_bars.onclick = function () {
+          activeSettingsId = index;
+          if (!displayed) {
+            document.getElementById("settings").style.display = "block";
+            displayed = true;
+          } else {
+            document.getElementById("settings").style.display = "none";
+            displayed = false;
+          }
+        };
 
         var i = document.createElement("i");
         i.classList.add("fas", "fa-bars");
@@ -691,17 +693,16 @@
       function updateSlider(i, slider, checkbox) {
         alarmindex = activeSettingsId;
         if (!checkbox.checked) {
-          console.log(alarmindex)
+          console.log(alarmindex);
           alarms[alarmindex][i] = 1;
-          console.log(alarms[alarmindex])
+          console.log(alarms[alarmindex]);
           slider.style.transform = "translateX(26px)";
           slider.style.msTransform = "translateX(0px)";
           slider.style.webkitTransform = "translateX(0px)";
           slider.style.backgroundColor = "#e2c9a0";
         } else {
-          
           alarms[alarmindex][i] = 0;
-          console.log(alarms[alarmindex])
+          console.log(alarms[alarmindex]);
           slider.style.backgroundColor = "#ccc";
           slider.style.transform = "translateX(0px)";
           slider.style.msTransform = "translateX(0px)";
@@ -716,12 +717,11 @@
         () => {
           alarmindex = activeSettingsId;
           valueSpan.innerText = startTime.value;
-          alarms[alarmindex][2] = startTime.value;;
-          console.log(alarms[alarmindex])
+          alarms[alarmindex][2] = startTime.value;
+          console.log(alarms[alarmindex]);
         },
         false
       );
-
 
       form.addEventListener("submit", newAlarm);
 
@@ -773,6 +773,39 @@
         xhttp.send();
       }, 1000);
       */
+
+      const displayText = (text) => {
+        const receivedTextElement = document.getElementById("receivedText");
+        receivedTextElement.textContent = text;
+      };
+
+      const sendText = (text) => {
+        fetch("/sendtext", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `text=${encodeURIComponent(text)}`,
+        })
+          .then((response) => response.text())
+          .then((result) => {
+            console.log("result+ " + result); // Optional: Log the response from the server
+            // Additional code to update the HTML page if necessary
+          })
+          .catch((error) => {
+            console.error(error);
+            displayText(result);
+
+          });
+      };
+
+      document
+        .getElementById("textForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const text = document.getElementById("textInput").value;
+          sendText(text);
+        });
     </script>
   </body>
 </html>
