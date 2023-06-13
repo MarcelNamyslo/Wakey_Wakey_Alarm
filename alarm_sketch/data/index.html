@@ -108,8 +108,6 @@
       }
 
       input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
 
@@ -296,20 +294,22 @@
 
   <body>
     <h1 id="title">Wakey Wakey</h1>
-    <form id="textForm">
+    <!--
+      <form id="textForm">
       <input type="text" id="textInput" />
       <button type="submit">Send</button>
     </form>
     <div id="receivedText"></div>
-
+-->
     <div class="two-column-list">
       <ul class="alarm_list" id="alarm_list1">
+        <!-- 
         <li class="alarm-element">
           <span>
             <p>Alasvdffdrm 1</p>
           </span>
         </li>
-        <!-- 
+       
         <li class="alarm-element">
           <span>
             <p>Alasvdffdrm 1</p>
@@ -324,6 +324,7 @@
       </ul>
 
       <ul class="alarm_list" id="alarm_list2">
+        <!-- 
         <li class="alarm-element">
           <label class="switch">
             <input type="checkbox" checked />
@@ -334,7 +335,7 @@
             <i class="fas fa-bars"></i>
           </button>
         </li>
-        <!-- 
+        
         <li class="alarm-element">
           <label class="switch">
             <input type="checkbox" checked />
@@ -543,9 +544,10 @@
         }
       }
 
+      //not used
       function togglesettings(id) {
         var buttonId = id;
-        console.log("id" + buttonId);
+        console.log("button clicked id" + buttonId);
         if (!displayed) {
           document.getElementById("settings").style.display = "block";
           displayed = true;
@@ -561,10 +563,11 @@
 
       const alarms = [];
 
-      function newAlarm(event) {
+      function submitnewAlarm(event) {
         event.preventDefault();
         var index = alarmindex;
-        alarmindex = alarmindex + 1;
+        var active = 1;
+
         var alarmname = document.getElementById("alarm_name").value;
         var alarmtime = document.getElementById("alarm_time").value;
         var monday = document.getElementById("mondayAlarm").checked ? 1 : 0;
@@ -577,10 +580,10 @@
         var saturday = document.getElementById("saturdayAlarm").checked ? 1 : 0;
         var sunday = document.getElementById("sundayAlarm").checked ? 1 : 0;
 
-        const alarm = [
-          alarmindex,
-          alarmname,
+        var newalarm = [
+          index,
           alarmtime,
+          alarmname,
           monday,
           tuesday,
           wednesday,
@@ -588,65 +591,11 @@
           friday,
           saturday,
           sunday,
+          active,
         ];
 
-        alarms.push(alarm);
-
-        //create slider
-        // Add new item to the list
-        var list = document.getElementById("alarm_list1");
-        var list2 = document.getElementById("alarm_list2");
-        var newItem1 = document.createElement("li");
-        newItem1.id = "alarm_element" + " " + index;
-        newItem1.classList.add("alarm-element");
-        newItem1.style.marginTop = "55px";
-        newItem1.textContent = alarmname + ", " + alarmtime;
-        // Reset form inputs
-        alarmname = "";
-        alarmtime = "";
-
-        list.appendChild(newItem1);
-
-        var list2 = document.getElementById("alarm_list2");
-        var newItem2 = document.createElement("li");
-        newItem2.id = "alarm_element" + " " + index;
-        newItem2.classList.add("alarm-element");
-        var label = document.createElement("label");
-        var input = document.createElement("input");
-        var span = document.createElement("span");
-
-        var fa_bars = document.createElement("button");
-        fa_bars.classList.add("toggler");
-        fa_bars.id = "toggler " + index;
-        fa_bars.onclick = function () {
-          activeSettingsId = index;
-          if (!displayed) {
-            document.getElementById("settings").style.display = "block";
-            displayed = true;
-          } else {
-            document.getElementById("settings").style.display = "none";
-            displayed = false;
-          }
-        };
-
-        var i = document.createElement("i");
-        i.classList.add("fas", "fa-bars");
-        fa_bars.appendChild(i);
-
-        label.classList.add("switch");
-        input.type = "checkbox";
-        input.id = "checkbox" + index;
-        span.classList.add("slider");
-        span.id = "slider " + index;
-
-        label.appendChild(input);
-        label.appendChild(span);
-
-        newItem2.appendChild(label);
-        newItem2.appendChild(fa_bars);
-
-        list2.appendChild(newItem2);
-        document.getElementById("myForm").style.display = "none";
+        sendText("N," + newalarm);
+        console.log("send the data " + newalarm);
 
         let myMediaQuery = window.matchMedia("(max-width: 500px)");
 
@@ -657,6 +606,7 @@
           document.getElementById("title").style.display = "block";
         }
 
+        //set form back to default
         document.getElementById("alarm_name").checked = false;
         document.getElementById("alarm_time").checked = false;
         document.getElementById("mondayAlarm").checked = false;
@@ -666,52 +616,170 @@
         document.getElementById("fridayAlarm").checked = false;
         document.getElementById("saturdayAlarm").checked = false;
         document.getElementById("sundayAlarm").checked = false;
+
+        document.getElementById("myForm").style.display = "none";
       }
 
-      function sendData(event) {
-        event.preventDefault();
-        var alarm_name = document.getElementById("alarm_name").value;
-        var alarm_time = document.getElementById("alarm_time").value;
-        var data = document.getElementById("alarm_name").value;
-        console.log(data);
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/saveData", true);
-        xhr.setRequestHeader(
-          "Content-Type",
-          "application/x-www-form-urlencoded"
-        );
-        xhr.send("data=" + encodeURIComponent(data));
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            console.log("Data saved successfully.");
-          } else {
-            console.log("Error saving data.");
+      function handleResponse(response) {
+        //create slider
+        // Add new item to the list
+        var newAlarm = true;
+
+        var responseArray = String(response).split(",");
+        console.log("response: " + response);
+        console.log("responseArray: " + responseArray);
+        console.log("responsearray index " + responseArray[0]);
+        let alarmtime = responseArray[1];
+        let alarmname = responseArray[2];
+        for (let i = 0; i < alarms.length; i++) {
+          console.log(alarms[i]);
+          if (alarms[i][0] == responseArray[0]) {
+            // no new alarm, just change existent
+            newAlarm = false;
           }
-        };
+        }
+        if (newAlarm) {
+          alarms.push(responseArray);
+          var sentalarm = alarms[alarmindex];
+          alarmindex = alarmindex + 1;
+          //new alarm
+          var index = responseArray[0];
+          var list = document.getElementById("alarm_list1");
+          var list2 = document.getElementById("alarm_list2");
+          var newItem1 = document.createElement("li");
+          newItem1.id = "alarm_element" + " " + index;
+          newItem1.classList.add("alarm-element");
+          newItem1.style.marginTop = "55px";
+          newItem1.textContent = alarmname + ", " + alarmtime;
+          // Reset form inputs
+          alarmname = "";
+          alarmtime = "";
+
+          list.appendChild(newItem1);
+          responseArray;
+          var list2 = document.getElementById("alarm_list2");
+          var newItem2 = document.createElement("li");
+          newItem2.id = "alarm_element" + " " + index;
+          newItem2.classList.add("alarm-element");
+          var label = document.createElement("label");
+          var input = document.createElement("input");
+          var span = document.createElement("span");
+
+          var fa_bars = document.createElement("button");
+          fa_bars.classList.add("toggler");
+          fa_bars.id = "toggler " + index;
+          fa_bars.onclick = function () {
+            activeSettingsId = index;
+            console.log("button clicked id" + index);
+            if (!displayed) {
+              setSlider();
+              document.getElementById("settings").style.display = "block";
+              displayed = true;
+            } else {
+              document.getElementById("settings").style.display = "none";
+              displayed = false;
+            }
+          };
+
+          var i = document.createElement("i");
+          i.classList.add("fas", "fa-bars");
+          fa_bars.appendChild(i);
+
+          label.classList.add("switch");
+          input.type = "checkbox";
+          input.id = "checkbox" + index;
+          input.checked = true;
+          span.classList.add("slider");
+          span.id = "slider " + index;
+          input.addEventListener("click", function () {
+            if (input.checked) {
+              alarms[index][10] = 1;
+              console.log(alarms[index][0]);
+              console.log(alarms[index][1]);
+              console.log(alarms[index][10]);
+              console.log(alarms[index][10]);
+              console.log( alarms[index]);
+              sendText("U," + alarms[index]);
+            } else if(!input.checked) {
+              alarms[index][10] = 0;
+              console.log(alarms[index][10]);
+              console.log(alarms[index]);
+              sendText("U," + alarms[index]);
+            }
+          });
+
+          label.appendChild(input);
+          label.appendChild(span);
+
+          newItem2.appendChild(label);
+          newItem2.appendChild(fa_bars);
+
+          list2.appendChild(newItem2);
+        }
       }
 
-      function updateSlider(i, slider, checkbox) {
-        alarmindex = activeSettingsId;
-        if (!checkbox.checked) {
-          console.log(alarmindex);
-          alarms[alarmindex][i] = 1;
-          console.log(alarms[alarmindex]);
-          slider.style.transform = "translateX(26px)";
-          slider.style.msTransform = "translateX(0px)";
-          slider.style.webkitTransform = "translateX(0px)";
-          slider.style.backgroundColor = "#e2c9a0";
+      
+
+      function setSlider() {
+        var monday = alarms[activeSettingsId][3];
+        var tuesday = alarms[activeSettingsId][4];
+        var wednesday = alarms[activeSettingsId][5];
+        var thursday = alarms[activeSettingsId][6];
+        var friday = alarms[activeSettingsId][7];
+        var saturday = alarms[activeSettingsId][8];
+        var sunday = alarms[activeSettingsId][9];
+        var days = [
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday,
+          sunday,
+        ];
+        var spans = [
+          mondaySpan,
+          tuesdaySpan,
+          wednesdaySpan,
+          thursdaySpan,
+          fridaySpan,
+          saturdaySpan,
+          sundaySpan,
+        ];
+        var checkboxes = [
+          mondayCheckbox,
+          tuesdayCheckbox,
+          wednesdayCheckbox,
+          thursdayCheckbox,
+          fridayCheckbox,
+          saturdayCheckbox,
+          sundayCheckbox,
+        ];
+
+        for (let i = 0; i < days.length; i++) {
+          if (days[i] == 1) {
+            checkboxes[i].checked = true;
+          }
+        }
+      }
+
+      function updateSlider(i, span, checkbox) {
+        if (checkbox.checked) {
+          alarms[activeSettingsId][i] = 0;
+          console.log("Op 1: " + alarms[activeSettingsId]);
+          console.log("Op 1: " + alarms);
+          sendText("U," + alarms[activeSettingsId]);
         } else {
-          alarms[alarmindex][i] = 0;
-          console.log(alarms[alarmindex]);
-          slider.style.backgroundColor = "#ccc";
-          slider.style.transform = "translateX(0px)";
-          slider.style.msTransform = "translateX(0px)";
-          slider.style.webkitTransform = "translateX(0px)";
+          alarms[activeSettingsId][i] = 1;
+          console.log("Op 2: " + alarms[activeSettingsId]);
+          console.log("Op 2: " + alarms);
+          sendText("U," + alarms[activeSettingsId]);
         }
       }
 
       const startTime = document.getElementById("alarm_settings_time");
       const valueSpan = document.getElementById("timeset");
+
       startTime.addEventListener(
         "input",
         () => {
@@ -723,7 +791,7 @@
         false
       );
 
-      form.addEventListener("submit", newAlarm);
+      form.addEventListener("submit", submitnewAlarm);
 
       var mondayCheckbox = document.getElementById("mondayCheckbox");
       var mondaySpan = document.getElementById("mondaySpan");
@@ -761,23 +829,6 @@
         updateSlider(9, sundaySpan, sundayCheckbox);
       });
 
-      /**setInterval(function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("temperature").innerHTML =
-              this.responseText;
-          }
-        };
-        xhttp.open("GET", "/back", true);
-        xhttp.send();
-      }, 1000);
-      */
-
-      const displayText = (text) => {
-        const receivedTextElement = document.getElementById("receivedText");
-        receivedTextElement.textContent = text;
-      };
 
       const sendText = (text) => {
         fetch("/sendtext", {
@@ -791,21 +842,18 @@
           .then((result) => {
             console.log("result+ " + result); // Optional: Log the response from the server
             // Additional code to update the HTML page if necessary
+            handleResponse(result);
           })
           .catch((error) => {
             console.error(error);
             displayText(result);
-
           });
       };
 
-      document
-        .getElementById("textForm")
-        .addEventListener("submit", (event) => {
-          event.preventDefault();
-          const text = document.getElementById("textInput").value;
-          sendText(text);
-        });
+      //let exampleAlarm = [0, "test", "12:00", 1, 0, 0, 1, 1, 1, 1, 1];
+      //let exampleResponse = ["0, test, 12:00, 1, 0, 0, 1, 1, 1, 1, 1"];
+      //handleResponse(exampleResponse);
+      //alarms.push(exampleAlarm);
     </script>
   </body>
 </html>
