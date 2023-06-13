@@ -2,7 +2,9 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
+#define BUTTON_DELAY = 50 //millis with what rate buttons can be pressed, not nedded if INPUT_PULLUP works right
 #define MAX_RANGE = 100;
+#define BLINK_RATE = 400;
 
 const char* ssid = "Point";
 const char* password =  "Point2424";
@@ -13,24 +15,29 @@ const char* password =  "Point2424";
 //const char* ssid = "DaktiloCafe";
 //const char* password = "buldozer2017";
 
+const int LDRSensorPin = 3;
 const int switchPin = 4;
-//const int modePin = 5;
+const int modePin = 5;
 const int lightRegPin = 6;
 const int rateRegPin = 7;
 const int warmPin = 8;
 const int coldPin = 9;
 
-const int
 bool turnedOn = false;
 bool stateSave = turnedOn;
-//bool autoMode = false;
-//bool modeSave = autoMode;
+unsigned long lastSwitch= 0;
+bool autoMode = false;
+bool modeSave = autoMode;
+unsigned long lastAutoSwitch= 0;
+int LDR_ON_LIGHT = 100; //TODO set correctly
+int LDR_IN_DARK = 0; //TODO set correctly
+bool brightnessChangeTurnOn = true; //specifies if changeing brightness should turn on the light
 int brightness = 0; //in percent
 int brightnessSave = brightness;
 int coldRate = MAX_RANGE / 2; //the share of the cold white in the cold-warm mix
 int rateSave = coldRate
 
-Alarm alarm = NULL;
+Alarm alarm = NULL; //defines if we're currently in an alarm
 
 AsyncWebServer server(80);
 
@@ -110,11 +117,19 @@ void handleGetData(AsyncWebServerRequest *request) {
   request->send(200, "text/plain", data);
 }
 
+void setFullLightValue() {
+    LDR_ON_LIGHT = analogRead(LDRSensorPin);
+}
+
+void setNoLightValue() {
+    LDR_IN_DARK = analogRead(LDRSensorPin);
+}
 
 
 
 void setup() {
 
+  pinMode(LDRSensorPin, INPUT);
   pinMode(switchPin, INPUT_PULLUP);
   pinMode(modePin, INPUT_PULLUP);
   pinMode(lightRegPin, INPUT);
@@ -169,42 +184,48 @@ void setup() {
 
 
 void loop() {
+    checkForAlarm();
+
     if(checkChanges()) {
         applyLight();
+    }
+    if(alarm != NULL) {
+        proceedAlarm();
     }
 
     delay(1);
 }
 
 void toggleTurnedOn() {
-    turnedOn = !stateSave//turnedOn; //maybe use stateSave
-    Serial.print("State toggled on: ");Serial.println(millis());
+    unsigned long millis = millis();
+    Serial.println("Switch pressed on:", millis;
+    if(millis -lastSwitch > BUTTON_DELAY) {
+        turnedOn = !turnedOn; //maybe use stateSave
+        Serial.print("State toggled to: ");Serial.println(turnedOn);
+        lastSwitch = millis;
+    }
 }
 
 void toggleMode() {
-    autoMode = !modeSave//autoMode; //maybe use modeSave
-    Serial.print("Mode toggled on: ");Serial.println(millis());
-}
-/***
-void adjustBrightness() {
-    if(alarm == NULL) {
-        analogRead(lightRegPin);
+    unsigned long millis = millis();
+    Serial.println("Auto-mode button pressed on:", millis);
+    if(millis -lastAutoSwitch > BUTTON_DELAY) {
+        autoMode = !autoMode; //maybe use modeSave
+        Serial.print("Mode toggled to: ");Serial.println(autoMode);
+        lastAutoSwitch = millis;
     }
 }
 
-void adjustRate() {
-    if(alarm == NULL) {
-        analogRead(lightRegPin);
-    }
-}
-***/
 bool checkChanges() {
     bool change = false;
-    if(alarm != NULL) {
-
-        if(autoMode != modeSave) {modeSave = autoMode;}
+    if(alarm != NULL) { //only interrupting alarm
         if(turnedOn != stateSave) {
-
+            alarm = NULL;
+            turnedOn = stateSave;
+        }
+        if(autoMode != modeSave) {
+            alarm = NULL;
+            autoMode = modeSave;
         }
     } else {
         if(turnedOn != stateSave) {
@@ -215,22 +236,29 @@ bool checkChanges() {
         if(autoMode != modeSave) {
             change = true;
             modeSave = autoMode;
-            //TODO calculate brightness from LDR
         }
-        if(readLightSettings()) {
-            brightness = brightnessSave;
-            coldRate = rateSave;
+        if(autoMode && !isInTargetLDRRange()) {
             change = true;
         }
+    }
+    if(checkReadLightSettingChanges()) { //interrupting alarm and adjusting light settings
+        brightness = brightnessSave;
+        coldRate = rateSave;
+        alarm = NULL;
+        change = true;
     }
 
     return change;
 }
 
-bool readLightSettings() {
+bool checkReadLightSettingChanges() {
     bool change = false;
     temp = analogRead(lightRegPin);
     if(temp != brightnessSave) {
+        //if configured, changing brightness when turned off turns light on, otherwise only if brightness was already zero
+        if(brightnessChangeTurnOn || brightnessSave == 0) {
+            turnedOn = true;
+        }
         change = true;
         brightnessSave = temp;
     }
@@ -238,20 +266,81 @@ bool readLightSettings() {
     if(temp != rateSave) {
         change = true;
         rateSave = temp;
+    }
     return change;
 }
 
 void applyLight() {
-    if(autoMode) {
+    if(autoMode && alarm != NULL) {
         autoAdjustLight();
     } else {
-        analogWrite(coldPin, coldRate * (brightness/MAX_RANGE));
-        analogWrite(warmPin, (MAX_RANGE - coldRate) * (brightness/MAX_RANGE));
+        applyColdWarmMix(coldRate, brightness);
     }
 }
 
-void autoAdjustLight() {
+void autoAdjustLight(int LDRValue) {
+    int tempBrightness = brightness;
+    int currentLDR = analogRead(LDRSensorPin);
+    int targetLDR = getTargetLDR();
+
+    if(targetLDR > currentLDR) {
+        while(targetLDR > currentLDR && currentLDR < MAX_RANGE) {
+            tempBrightness++;
+            applyColdWarmMix(coldRate, tempBrightness);
+            int currentLDR = analogRead(LDRSensorPin);
+        }
+    } else if(targetLDR < currentLDR) {
+        while(targetLDR < currentLDR && currentLDR > 0) {
+            tempBrightness--;
+            applyColdWarmMix(coldRate, tempBrightness);
+            int currentLDR = analogRead(LDRSensorPin);
+        }
+    }
+}
+
+bool isInTargetLDRRange() {
+    int target = getTargetLDR();
+    int current = analogRead(LDRSensorPin);
+    if(abs(target - current) < abs(LDR_ON_LIGHT - LDR_IN_DARK) / MAX_RANGE) {
+    }
+}
+
+int getTargetLDR() {
+    return map(brightness, 0, MAX_RANGE, LDR_IN_DARK, LDR_ON_LIGHT));
+    //return brightness * (LDR_ON_LIGHT - LDR_IN_DARK) +LDR_IN_DARK //alternative
+}
+
+void applyColdWarmMix(int rate, int tempBrightness) {
+    //setting higher to brightness, other according to ratio
+    int highPin = (rate > MAX_RANGE / 2 ? coldPin : warmPin);
+    int lowPin = (rate > MAX_RANGE / 2 ? warmPin : coldPin);
+
+    temBrightness = min(temBrightness, MAX_RANGE); //cap to max analogWrite
+    analogWrite(highPin, tempBrightness);
+    analogWrite(lowPin, (MAX_RANGE - rate) * ((brightness/rate)*MAX_RANGE)); //maybe convert to float
+
+    //alternatively assuming 2 half lit are as bright as one full lit led (stripe)
+    /***
+    analogWrite(coldPin, coldRate * (brightness/MAX_RANGE));
+    analogWrite(warmPin, (MAX_RANGE - coldRate) * (brightness/MAX_RANGE));
+    ***/
+}
+
+void checkForAlarm() {
 
 }
 
+void proceedAlarm() {
+    startBrightness =
+    if(alarm.getType() == RISE_TO_MAX) {
+        brightness = bri
+    } else if(alarm.getType() == RISE_TO_LEVEL) {
+
+    } else if(alarm.getType() == BLINK) {
+        int toggleValue = (brightness != 0 ? 1 : 0);
+        if((millis() - alarm.getNextInitiation()) / BLINK_RATE) % 2 == toggleValue) {
+            brightness = (toggleValue == 0 ? brightnessSave : 0);
+        }
+    }
 }
+
