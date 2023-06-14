@@ -7,6 +7,7 @@
 #define BUTTON_DELAY = 50 //millis with what rate buttons can be pressed, not nedded if INPUT_PULLUP works right
 #define MAX_RANGE = 100;
 #define BLINK_RATE = 400;
+#define STANDARD_ALARM_DURATION = 10000;
 
 //wifipassword
 const char *ssid = "H";
@@ -64,8 +65,8 @@ int brightnessSave = brightness;
 int coldRate = MAX_RANGE / 2; //the share of the cold white in the cold-warm mix
 int rateSave = coldRate
 
-Alarm alarm = NULL; //defines if we're currently in an alarm
-
+//Alarm alarm = NULL; //defines if we're currently in an alarm
+int alarm = 0; //the millis the alarm started
 
 void handleText(AsyncWebServerRequest *request)
 {
@@ -182,15 +183,14 @@ void loop() {
         ifActive = String(alarms[0][alarms[0].length() -1]);
         if ((alarmTimes[textToSend[i]] + ":00") == String(currentime) && ifActive == "1" ) {
             Serial.println("ALARM!");
+
         }
     }
-
-    checkForAlarm();
 
     if(checkChanges()) {
         applyLight();
     }
-    if(alarm != NULL) {
+    if(alarm != 0) {
         proceedAlarm();
     }
 
@@ -219,13 +219,13 @@ void toggleMode() {
 
 bool checkChanges() {
     bool change = false;
-    if(alarm != NULL) { //only interrupting alarm
+    if(alarm != 0) { //only interrupting alarm
         if(turnedOn != stateSave) {
-            alarm = NULL;
+            alarm = 0;
             turnedOn = stateSave;
         }
         if(autoMode != modeSave) {
-            alarm = NULL;
+            alarm = 0;
             autoMode = modeSave;
         }
     } else {
@@ -245,7 +245,7 @@ bool checkChanges() {
     if(checkReadLightSettingChanges()) { //interrupting alarm and adjusting light settings
         brightness = brightnessSave;
         coldRate = rateSave;
-        alarm = NULL;
+        alarm = 0;
         change = true;
     }
 
@@ -272,7 +272,7 @@ bool checkReadLightSettingChanges() {
 }
 
 void applyLight() {
-    if(autoMode && alarm != NULL) {
+    if(autoMode && alarm == 0) {
         autoAdjustLight();
     } else {
         applyColdWarmMix(coldRate, brightness);
@@ -327,59 +327,66 @@ void applyColdWarmMix(int rate, int tempBrightness) {
     ***/
 }
 
-void checkForAlarm() {
-
-}
-
 void proceedAlarm() {
-    startBrightness =
-    if(alarm.getType() == RISE_TO_MAX) {
-        brightness = bri
-    } else if(alarm.getType() == RISE_TO_LEVEL) {
+    if(alarm == 0 || millis() - alarm > STANDARD_ALARM_DURATION) {
+        alarm = 0;
+        return;
+    }
 
-    } else if(alarm.getType() == BLINK) {
-        int toggleValue = (brightness != 0 ? 1 : 0);
-        if((millis() - alarm.getNextInitiation()) / BLINK_RATE) % 2 == toggleValue) {
-            brightness = (toggleValue == 0 ? brightnessSave : 0);
-        }
+    int startBrightness = (turnedOn ? brightnessSave : 0);
+    int maxBrightness = (turnedOn ? MAX_RANGE : brightnessSave);
+    float progress = static_cast<float>() / STANDARD_ALARM_DURATION;
+    brightness = map(millis() - alarm, alarm, alarm + STANDARD_ALARM_DURATION, startBrightness, maxBrightness);
+    coldRate = map(millis() - alarm, alarm, alarm + STANDARD_ALARM_DURATION, (turnedOn ? coldRate : 0), MAX_RANGE);
+
+
+//    if(alarm.getType() == RISE_TO_MAX) {
+//        brightness = bri
+//    } else if(alarm.getType() == RISE_TO_LEVEL) {
+//
+//    } else if(alarm.getType() == BLINK) {
+//        int toggleValue = (brightness != 0 ? 1 : 0);
+//        if((millis() - alarm.getNextInitiation()) / BLINK_RATE) % 2 == toggleValue) {
+//            brightness = (toggleValue == 0 ? brightnessSave : 0);
+//        }
     }
 }
 
 void startAP() {
-  Serial.println(F("[ INFO ] ESP-RFID is running in Fallback AP Mode"));
-  uint8_t macAddr[6];
-  WiFi.softAPmacAddress(macAddr);
-  char ssid[15];
-  sprintf(ssid, "MIS-Car-%02x%02x%02x", macAddr[3], macAddr[4], macAddr[5]);
-  startAPMode(ssid);
+    Serial.println(F("[ INFO ] ESP-RFID is running in Fallback AP Mode"));
+    uint8_t macAddr[6];
+    WiFi.softAPmacAddress(macAddr);
+    char ssid[15];
+    sprintf(ssid, "MIS-Car-%02x%02x%02x", macAddr[3], macAddr[4], macAddr[5]);
+    startAPMode(ssid);
 }
 
 bool startAPMode(const char * ssid) {
-  WiFi.mode(WIFI_AP);
-  Serial.print(F("[ INFO ] Configuring access point... "));
-  bool success = WiFi.softAP(ssid, NULL);
-  Serial.println(success ? "Ready" : "Failed!");
-  // Access Point IP
-  IPAddress myIP = WiFi.softAPIP();
-  Serial.print(F("[ INFO ] AP IP address: "));
-  Serial.println(myIP);
-  Serial.printf("[ INFO ] AP SSID: %s\n", ssid);
-  isWifiConnected = success;
-  return success;
+    WiFi.mode(WIFI_AP);
+    Serial.print(F("[ INFO ] Configuring access point... "));
+    bool success = WiFi.softAP(ssid, NULL);
+    Serial.println(success ? "Ready" : "Failed!");
+    // Access Point IP
+    IPAddress myIP = WiFi.softAPIP();
+    Serial.print(F("[ INFO ] AP IP address: "));
+    Serial.println(myIP);
+    Serial.printf("[ INFO ] AP SSID: %s\n", ssid);
+    isWifiConnected = success;
+    return success;
 }
 
 String formatTime(int hour, int minute) {
-  String time = "";
+    String time = "";
 
-  if (hour < 10) {
+    if (hour < 10) {
     time += "0";
-  }
-  time += String(hour) + ":";
+    }
+    time += String(hour) + ":";
 
-  if (minute < 10) {
+    if (minute < 10) {
     time += "0";
-  }
-  time += String(minute) + ":";
+    }
+    time += String(minute) + ":";
 
-  return time;
+    return time;
 }
