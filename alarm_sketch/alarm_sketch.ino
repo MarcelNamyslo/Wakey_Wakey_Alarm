@@ -4,6 +4,17 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
+
+#define LED_PIN1 2
+
+#define LED_PIN2 0
+
+#define LED_PIN3 4
+
+#define LED_PIN4 5
+
+
+
 //wifipassword
 const char *ssid = "H";
 const char *password = "hakansson";
@@ -16,12 +27,14 @@ String ifActive;
 //realtime
 String currentime;
 //connection mode (0 = external wifi)  (1 = internal wifi)
-const char *connection_mode = "0";
+const char *connection_mode = "1";
 bool isWifiConnected = false;
 AsyncWebServer server(80);
 String textToSend;
 String alarmTimes[20];
 String alarms[20];
+
+int turns = 10;
 
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
@@ -38,35 +51,40 @@ void handleText(AsyncWebServerRequest *request)
 
 
     //if it is a new alarm, otherwise it is "U" for update alarm
-    if(String(textToSend[0]) == "N"){
-   
-    Serial.println("Received data: " + textToSend);
+    if (String(textToSend[0]) == "N") {
 
-    Serial.println(timer);
-    
-    alarmTimes[index.toInt()] = timer;
-    alarms[index.toInt()] = textToSend.substring(2);
-    
+      Serial.println("Received data: " + textToSend);
 
-    File file = SPIFFS.open("/data.txt", "a");
+      Serial.println(timer);
 
-    file.println(textToSend);
-    file.close();
+      alarmTimes[index.toInt()] = timer;
+      alarms[index.toInt()] = textToSend.substring(2);
 
-    request->send(200, "text/plain", textToSend.substring(2));
 
-   }else if(String(textToSend[0]) == "U"){
+      File file = SPIFFS.open("/data.txt", "a");
 
-    alarmTimes[index.toInt()] = timer;
-    alarms[index.toInt()] = textToSend.substring(2); 
-    Serial.println(alarmTimes[textToSend[2]]);
-    Serial.println(alarms[textToSend[2]]); 
-   }
+      file.println(textToSend);
+      file.close();
+
+      request->send(200, "text/plain", textToSend.substring(2));
+
+    } else if (String(textToSend[0]) == "U") {
+
+      alarmTimes[index.toInt()] = timer;
+      alarms[index.toInt()] = textToSend.substring(2);
+      Serial.println(alarmTimes[textToSend[2]]);
+      Serial.println(alarms[textToSend[2]]);
+    }
   }
 }
 
 void setup()
 {
+  pinMode(LED_PIN1, OUTPUT);
+  pinMode(LED_PIN2, OUTPUT);
+  pinMode(LED_PIN3, OUTPUT);
+  pinMode(LED_PIN4, OUTPUT);
+
   Serial.begin(115200);
   timeClient.begin();
   if (connection_mode == "0") {
@@ -91,6 +109,7 @@ void setup()
   } else {
 
     startAP();
+    SPIFFS.begin();
   }
 
 
@@ -117,10 +136,33 @@ void loop()
   currentime = timeClient.getFormattedTime();
   Serial.println(currentime);
   for (int i = 0; i < 10; i++) {
-  
-    ifActive = String(alarms[0][alarms[0].length() -1]);
-    if ((alarmTimes[textToSend[i]] + ":00") == String(currentime) && ifActive == "1" ) {
+
+    ifActive = String(alarms[0][alarms[0].length() - 1]);
+    //Serial.println(alarmTimes[textToSend[i] + ":00" +" " +  String(currentime));
+    if ((alarmTimes[i] + ":00") == String(currentime) && ifActive == "1" ) {
       Serial.println("ALARM!");
+      while (turns > 0) {
+       
+        digitalWrite(LED_PIN1, HIGH);
+        delay(500);
+        digitalWrite(LED_PIN1, LOW);
+        digitalWrite(LED_PIN2, HIGH);
+        delay(500);
+        digitalWrite(LED_PIN2, LOW);
+        digitalWrite(LED_PIN3, HIGH);
+
+        delay(500);
+        digitalWrite(LED_PIN3, LOW);
+        digitalWrite(LED_PIN4, HIGH);
+
+        delay(500);
+        digitalWrite(LED_PIN4, LOW);
+        turns = turns -1;
+      }
+      turns = 10;
+
+
+      digitalWrite(LED_PIN4, LOW);
     }
   }
 

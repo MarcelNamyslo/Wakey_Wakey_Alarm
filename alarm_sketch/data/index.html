@@ -850,10 +850,15 @@
           });
       };
 
-      //let exampleAlarm = [0, "test", "12:00", 1, 0, 0, 1, 1, 1, 1, 1];
-      //let exampleResponse = ["0, test, 12:00, 1, 0, 0, 1, 1, 1, 1, 1"];
-      //handleResponse(exampleResponse);
-      //alarms.push(exampleAlarm);
+      let exampleAlarm1 = [0, "example alarm 1", "14:43", 1, 0, 0, 0, 0, 0, 0, 0];
+      let exampleResponse1 = ["0, example alarm 1, 14:43, 1, 0, 0, 0, 0, 0, 0, 0"];
+      let exampleAlarm2 = [1, "example alarm 2", "12:00", 1, 0, 0, 0, 0, 0, 0, 0];
+      let exampleResponse2 = ["1, example alarm 2, 12:00, 1, 0, 0, 0, 0, 0, 0, 0"];
+      handleResponse(exampleResponse1);
+      alarms.push(exampleAlarm1);
+      handleResponse(exampleResponse2);
+      alarms.push(exampleAlarm2);
+      
     </script>
   </body>
 </html>
